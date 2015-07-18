@@ -1,3 +1,3 @@
 <?php
 
-$globalZookeeperHosts = '106.39.209.43:2182';
+$globalZookeeperHosts = '127.0.0.1:2181,127.0.0.1:2182';

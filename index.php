@@ -22,3 +22,9 @@ if (is_array($children)) foreach ($children as $child) {
 }
 ?>
 </ul>
+<pre>
+<?php
+$value = $zookeeper->get($path);
+echo $value;
+?>
+</pre>
