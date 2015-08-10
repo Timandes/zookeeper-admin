@@ -6,8 +6,8 @@ $path = '/';
 if (isset($_GET['path']))
     $path = $_GET['path'];
 
-$zookeeper = new \Zookeeper($GLOBALS['globalZookeeperHosts']);
-
+$zookeeper = new \ZookeeperClient();
+$zookeeper->connect($GLOBALS['globalZookeeperHosts']);
 $children = $zookeeper->getChildren($path);
 ?>
 <ul>
