@@ -1,12 +1,12 @@
 <?php
 
-include 'config.php';
+include 'bootstrap.php';
 
 $path = '/';
 if (isset($_GET['path']))
     $path = $_GET['path'];
 
-$zookeeper = new \ZookeeperClient();
+$zookeeper = new \timandes\ZookeeperClient();
 $zookeeper->connect($GLOBALS['globalZookeeperHosts']);
 $children = $zookeeper->getChildren($path);
 ?>
@@ -25,6 +25,6 @@ if (is_array($children)) foreach ($children as $child) {
 <pre>
 <?php
 $value = $zookeeper->get($path);
-echo $value;
+var_export($value);
 ?>
 </pre>
