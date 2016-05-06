@@ -1,6 +1,6 @@
 <?php
 
-include 'bootstrap.php';
+include __DIR__ . '/bootstrap.php';
 
 $path = '/';
 if (isset($_GET['path']))
@@ -8,7 +8,23 @@ if (isset($_GET['path']))
 
 $zookeeper = new \timandes\ZookeeperClient();
 $zookeeper->connect($GLOBALS['globalZookeeperHosts']);
-$children = $zookeeper->getChildren($path);
+
+if (isset($_SESSION['ZA_CERTS'])
+        && is_array($_SESSION['ZA_CERTS'])) {
+    foreach ($_SESSION['ZA_CERTS'] as $cert) {
+        $zookeeper->addAuth('digest', $cert);
+    }
+}
+
+try {
+    $children = $zookeeper->getChildren($path);
+} catch (\ZookeeperClientCoreException $zcce) {
+    if ($zcce->getCode() == \ZookeeperClient::ERR_NOAUTH) {
+        header("Location: add_auth.php");
+        exit(1);
+    }
+    throw $zcce;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,8 +80,18 @@ if ($path != '/') {
 <?php
 $value = $zookeeper->get($path);
 var_export($value);
+$jsonDecodedValue = false;
+if (is_string($value))
+    $jsonDecodedValue = @json_decode($value, true);
 ?>
                         </pre>
+<?php
+if ($jsonDecodedValue) {
+?>
+                        <pre>JSON Decoded: <?php var_export($jsonDecodedValue);?></pre>
+<?php
+}
+?>
                     </div>
                 </div>
             </div>
