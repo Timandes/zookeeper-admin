@@ -79,10 +79,18 @@ if ($path != '/') {
                         <pre>
 <?php
 $value = $zookeeper->get($path);
-var_export($value);
+echo ((null === $value)?'(nil)':htmlentities($value));
 $jsonDecodedValue = false;
-if (is_string($value))
+$xmlDecodedValue = false;
+if (is_string($value)) {
     $jsonDecodedValue = @json_decode($value, true);
+
+    $xmlElement = @simplexml_load_string($value);
+    if ($xmlElement) {
+        $tmp = json_encode($xmlElement);
+        $xmlDecodedValue = json_decode($tmp, true);
+    }
+}
 ?>
                         </pre>
 <?php
@@ -91,7 +99,13 @@ if ($jsonDecodedValue) {
                         <pre>JSON Decoded: <?php var_export($jsonDecodedValue);?></pre>
 <?php
 }
+if ($xmlDecodedValue) {
 ?>
+                        <pre>XML Decoded: <?php var_export($xmlDecodedValue);?></pre>
+<?php
+}
+?>
+
                     </div>
                 </div>
             </div>
