@@ -16,6 +16,7 @@ if (isset($_SESSION['ZA_CERTS'])
     }
 }
 
+$getChildrenException = null;
 try {
     $children = $zookeeper->getChildren($path);
 } catch (\ZookeeperClientCoreException $zcce) {
@@ -23,7 +24,9 @@ try {
         header("Location: add_auth.php");
         exit(1);
     }
-    throw $zcce;
+
+    $children = array();
+    $getChildrenException = $zcce;
 }
 ?>
 <!DOCTYPE html>
@@ -57,8 +60,14 @@ try {
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
 <?php
-if (is_array($children)) foreach ($children as $child) {
+if (is_array($children)
+        && $children) foreach ($children as $child) {
     echo '<li><a href="?path=' . urlencode(rtrim($path, '/') . '/' . $child) . '">' . $child . '</a></li>';
+} else {
+    $message = 'No child';
+    if ($getChildrenException)
+        $message .= '(' . $getChildrenException->getMessage() . ')';
+    echo '<li>' . $message . '</li>';
 }
 ?>
                     </ul>
