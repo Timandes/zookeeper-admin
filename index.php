@@ -21,7 +21,7 @@ try {
     $children = $zookeeper->getChildren($path);
 } catch (\ZookeeperClientCoreException $zcce) {
     if ($zcce->getCode() == \ZookeeperClient::ERR_NOAUTH) {
-        header("Location: add_auth.php");
+        header("Location: add_auth.php?path=" . urlencode($path));
         exit(1);
     }
 

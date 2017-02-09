@@ -2,10 +2,14 @@
 
 require __DIR__ . '/bootstrap.php';
 
+$path = '/';
+if (isset($_GET['path']))
+    $path = $_GET['path'];
+
 if (isset($_POST['user'])
         && isset($_POST['password'])) {
     $_SESSION['ZA_CERTS'][] = $_POST['user'] . ':' . $_POST['password'];
-    header("Location: index.php");
+    header("Location: index.php?path=" . urlencode($path));
     exit(0);
 }
 ?>
@@ -38,7 +42,7 @@ if (isset($_POST['user'])
         <div class="container">
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                    <form action="add_auth.php" method="POST">
+                    <form action="add_auth.php?path=<?php echo urlencode($path); ?>" method="POST">
                         <div class="form-group">
                             <label for="inputUser">User</label>
                             <input class="form-control" type="text" name="user" id="inputUser" />
