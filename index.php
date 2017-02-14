@@ -83,7 +83,27 @@ if ($path != '/') {
 <?php
 }
 ?>
-                    <h2 class="sub-header"><?php echo $path;?></h2>
+                    <h2 class="sub-header">
+<?php
+$p = $path;
+$a = array();
+do {
+    $name = basename($p);
+    if ($name === "")
+        break;
+    array_unshift($a, array(
+                    'path' => $p,
+                    'name' => $name,
+                ));
+    $p = dirname($p);
+} while(true);
+foreach ($a as $meta):
+?>
+                        /<a href="?path=<?php echo urlencode($meta['path']);?>"><?php echo $meta['name'];?></a>
+<?php
+endforeach;
+?>
+                    </h2>
                     <div class="table-responsive">
                         <pre>
 <?php
