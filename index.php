@@ -105,7 +105,15 @@ endforeach;
 ?>
                     </h2>
                     <div class="table-responsive">
-                        <pre>
+                        ACLs: <pre>
+<?php
+$acls = $zookeeper->getAcls($path);
+var_export($acls);
+?>
+                        </pre>
+                    </div>
+                    <div class="table-responsive">
+                        Value: <pre>
 <?php
 $value = $zookeeper->get($path);
 echo ((null === $value)?'(nil)':htmlentities($value));
